@@ -125,7 +125,7 @@ else:
     "Backend Developer",
     "Data Analyst",
     "QA Engineer",
-    "DevOps Engineer"
+    "DevOps Engineer",
 ])
     difficulty = st.radio("Pick a difficulty: ", ["Junior", "Mid", "Senior"])
     start_button = st.button("Start an interview")
