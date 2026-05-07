@@ -38,8 +38,7 @@ if "interview_finished" not in st.session_state:
     reraise=True
 )
 def get_feedback(question, answer):
-    messages = [
-        SystemMessage(f"""
+    messages = [("system",f"""
                     You are an interview evaluator.
             Question: {question}
             Candidate's answer: {answer}
@@ -47,9 +46,9 @@ def get_feedback(question, answer):
         Give brief feedback in 3-4 sentences max covering:
         - What was good
         - What was missing or incorrect
-        - One specific improvement""") ]
+        - One specific improvement"""), ("human", "Provide me a feedback for my response.") ]
 
-    response = llm_mistral.invoke(messages)
+    response = llm_gemini.invoke(messages)
     return response.content
 
 @retry(
@@ -60,11 +59,13 @@ def get_feedback(question, answer):
 )
 def get_next_question(role,difficulty,asked_questions=None,is_mistral=True,is_gemini=False):
     question_list = f"\n Do not repeat these questions: {asked_questions}" if asked_questions else ""
-    messages = [SystemMessage(f"""You are an interview coach for {role} at {difficulty} level.
-    Ask ONE interview question only.
-    No explanations, no follow-up probes, no commentary.{question_list}
-    Just the question.""")]
-    response = llm_mistral.invoke(messages)
+    messages = [("system", f"""You are an interview coach for {role} at {difficulty} level.
+Ask ONE interview question only.
+No explanations, no follow-up probes, no commentary.{question_list}
+Just the question."""),
+ ("human", "Ask me one interview question.")]
+    response = llm_gemini.invoke(messages)
+    print(response)
     return response.content
 @retry(
     wait=wait_exponential(multiplier=1, min=4, max=10),
@@ -74,8 +75,8 @@ def get_next_question(role,difficulty,asked_questions=None,is_mistral=True,is_ge
 )
 def get_summary(messages):
     history = "\n".join([f"{m['role']}: {m['content']}" for m in messages])
-    message = [SystemMessage(f"Create summary based on whole session {history}")]
-    response = llm_mistral.invoke(message)
+    message = [("system", f"Create summary based on whole session {history}"), ("human", "Provide me a summary of the interview session.")]
+    response = llm_gemini.invoke(message)
     return response.content
 
 if st.session_state.interview_started:
