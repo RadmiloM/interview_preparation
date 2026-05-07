@@ -96,15 +96,16 @@ if st.session_state.interview_started:
         st.session_state.messages.append({"role": "assistant", "content": feedback, "type": "feedback"})
         asked_questions = [message['content'] for message in st.session_state.messages if message.get('type') == 'question']
         if st.session_state.question_count >= 5 and not st.session_state.interview_finished:
-            try:
-                whole_summary = get_summary(st.session_state.messages)
-            except Exception as e:
-                print(f"Error type: {type(e).__name__}")
-                whole_summary = f"🏁 Interview finished! I couldn't generate a summary due to high traffic, but thanks for participating. {e}"
-                st.warning("Could not generate summary, finishing session.")
-            st.session_state.messages.append({"role":"assistant","content":whole_summary})
-            st.session_state.interview_finished = True
-            st.rerun()
+            with st.spinner("Generating summary in progress..."):
+                try:
+                    whole_summary = get_summary(st.session_state.messages)
+                except Exception as e:
+                    print(f"Error type: {type(e).__name__}")
+                    whole_summary = f"🏁 Interview finished! I couldn't generate a summary due to high traffic, but thanks for participating. {e}"
+                    st.warning("Could not generate summary, finishing session.")
+                st.session_state.messages.append({"role":"assistant","content":whole_summary})
+                st.session_state.interview_finished = True
+                st.rerun()
         else:
              with st.spinner("Generating question in progress..."):
                 try:
@@ -123,7 +124,8 @@ else:
     "Frontend Developer",
     "Backend Developer",
     "Data Analyst",
-    "QA Engineer"
+    "QA Engineer",
+    "DevOps Engineer"
 ])
     difficulty = st.radio("Pick a difficulty: ", ["Junior", "Mid", "Senior"])
     start_button = st.button("Start an interview")
