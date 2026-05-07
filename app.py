@@ -6,13 +6,17 @@ import os
 from langchain_mistralai import ChatMistralAI
 from langchain_core.messages import SystemMessage
 from tenacity import retry, wait_exponential, stop_after_attempt, retry_if_exception_type
+from langchain_google_genai import ChatGoogleGenerativeAI
 
 load_dotenv()
 
-llm = ChatMistralAI(
+llm_mistral = ChatMistralAI(
     model="mistral-large-latest",
     api_key=os.getenv("MISTRAL_API_KEY")
 )
+
+llm_gemini = ChatGoogleGenerativeAI(model="gemini-2.5-flash", 
+                                    api_key=os.getenv("GEMINI_API_KEY"))
 
 
 st.title("Interview Coach")
@@ -45,7 +49,7 @@ def get_feedback(question, answer):
         - What was missing or incorrect
         - One specific improvement""") ]
 
-    response = llm.invoke(messages)
+    response = llm_mistral.invoke(messages)
     return response.content
 
 @retry(
@@ -54,13 +58,13 @@ def get_feedback(question, answer):
     retry=retry_if_exception_type(httpx.HTTPStatusError),
     reraise=True
 )
-def get_next_question(role,difficulty,asked_questions=None):
+def get_next_question(role,difficulty,asked_questions=None,is_mistral=True,is_gemini=False):
     question_list = f"\n Do not repeat these questions: {asked_questions}" if asked_questions else ""
     messages = [SystemMessage(f"""You are an interview coach for {role} at {difficulty} level.
     Ask ONE interview question only.
     No explanations, no follow-up probes, no commentary.{question_list}
     Just the question.""")]
-    response = llm.invoke(messages)
+    response = llm_mistral.invoke(messages)
     return response.content
 @retry(
     wait=wait_exponential(multiplier=1, min=4, max=10),
@@ -70,8 +74,8 @@ def get_next_question(role,difficulty,asked_questions=None):
 )
 def get_summary(messages):
     history = "\n".join([f"{m['role']}: {m['content']}" for m in messages])
-    message = [SystemMessage(f"Create summary based on whole session {history}")] 
-    response = llm.invoke(message)
+    message = [SystemMessage(f"Create summary based on whole session {history}")]
+    response = llm_mistral.invoke(message)
     return response.content
 
 if st.session_state.interview_started:
@@ -85,16 +89,18 @@ if st.session_state.interview_started:
         with st.spinner("Generating feedback in progress..."):
             try:
                 feedback = get_feedback(question, answer)
-            except httpx.HTTPStatusError as e:
-                feedback = "⚠️ Feedback currently unavailable due to high traffic, but let's continue!"
+            except Exception as e:
+                print(f"Error type: {type(e).__name__}")
+                feedback = f"⚠️ Feedback currently unavailable due to high traffic, but let's continue!{e}"
                 st.error("Mistral API is not responding. Please check your connection.")
         st.session_state.messages.append({"role": "assistant", "content": feedback, "type": "feedback"})
         asked_questions = [message['content'] for message in st.session_state.messages if message.get('type') == 'question']
         if st.session_state.question_count >= 5 and not st.session_state.interview_finished:
             try:
                 whole_summary = get_summary(st.session_state.messages)
-            except httpx.HTTPStatusError:
-                whole_summary = "🏁 Interview finished! I couldn't generate a summary due to high traffic, but thanks for participating."
+            except Exception as e:
+                print(f"Error type: {type(e).__name__}")
+                whole_summary = f"🏁 Interview finished! I couldn't generate a summary due to high traffic, but thanks for participating. {e}"
                 st.warning("Could not generate summary, finishing session.")
             st.session_state.messages.append({"role":"assistant","content":whole_summary})
             st.session_state.interview_finished = True
@@ -102,10 +108,13 @@ if st.session_state.interview_started:
         else:
              with st.spinner("Generating question in progress..."):
                 try:
-                    next_question = get_next_question(st.session_state.role,st.session_state.difficulty,asked_questions)
-                except httpx.HTTPStatusError as e:
-                    next_question = "I'm having trouble connecting. Could you please try to refresh or wait a moment?"
-                    st.error("Mistral API is not responding. Please check your connection.") 
+                    next_question = get_next_question(st.session_state.role,
+                                                      st.session_state.difficulty,
+                                                      asked_questions)
+                except Exception as e:
+                   print(f"Error type: {type(e).__name__}")
+                   next_question = "I'm having trouble connecting. Could you please try to refresh or wait a moment?"
+                   st.error("Mistral API is not responding. Please check your connection.") 
              st.session_state.messages.append({"role": "assistant", "content": next_question, "type":"question"})
              st.session_state.question_count+=1
              st.rerun()
@@ -125,7 +134,8 @@ else:
         with st.spinner("Generating question in progress..."):
             try:
                 question = get_next_question(st.session_state.role, st.session_state.difficulty)
-            except httpx.HTTPStatusError as e:
+            except Exception as e:
+                print(f"Error type: {type(e).__name__}")
                 question = "I'm having trouble connecting. Could you please try to refresh or wait a moment?"
                 st.error("Mistral API is not responding. Please check your connection.")
         st.session_state.messages.append({"role": "assistant","content": question, "type": "question"})
