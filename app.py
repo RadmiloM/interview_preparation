@@ -17,8 +17,6 @@ llm_mistral = ChatMistralAI(
 
 llm_gemini = ChatGoogleGenerativeAI(model="gemini-1.5-flash", 
                                     api_key=os.getenv("GEMINI_API_KEY"))
-
-
 st.title("Interview Coach")
 
 if "messages" not in st.session_state:
@@ -51,7 +49,6 @@ def get_feedback(question, answer):
             return response.content
         except ChatGoogleGenerativeAIError:
             return "I'm having trouble generating feedback right now. Let's try again!"
-
 
 def get_next_question(role, difficulty, asked_questions=None):
     question_list = f"\nDo not repeat these questions: {asked_questions}" if asked_questions else ""
