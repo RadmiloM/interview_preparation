@@ -7,11 +7,12 @@ from langchain_mistralai import ChatMistralAI
 
 from langchain_google_genai import ChatGoogleGenerativeAI
 from langchain_google_genai.chat_models import ChatGoogleGenerativeAIError
+from tenacity import retry, stop_after_attempt, wait_exponential
 
 load_dotenv()
 
 llm_mistral = ChatMistralAI(
-    model="mistral-large-latest",
+    model="mistral-small-latest",
     api_key=os.getenv("MISTRAL_API_KEY")
 )
 
@@ -24,13 +25,24 @@ if "messages" not in st.session_state:
 
 if "interview_started" not in st.session_state:
     st.session_state.interview_started = False
+    
 if "question_count" not in st.session_state:
     st.session_state.question_count = 0
 
 if "interview_finished" not in st.session_state:
     st.session_state.interview_finished = False
 
+@retry(
+    wait=wait_exponential(multiplier=1, min=2, max=10),
+    stop=stop_after_attempt(3),
+    reraise=True 
+)
 def get_feedback(question, answer):
+    answer_words_count = len(answer.split())
+
+    if(answer_words_count < 10):
+        return "Your answer is too brief. Try to elaborate with at least 2-3 sentences covering the key concepts."
+    
     messages = [("system",f"""
                     You are an interview evaluator.
             Question: {question}
@@ -39,10 +51,7 @@ def get_feedback(question, answer):
         Give brief feedback in 3-4 sentences max covering:
         - What was good
         - What was missing or incorrect
-        - One specific improvement"""), ("human", "Provide me a feedback for my response.") ]
-    
-    if(len(answer.split()) < 10):
-        return "Your answer is too brief. Try to elaborate with at least 2-3 sentences covering the key concepts."
+        - One specific improvement"""), ("human", "Provide me a feedback for my response.") ] 
     
     try:
         response = llm_mistral.invoke(messages)
@@ -52,7 +61,7 @@ def get_feedback(question, answer):
             response = llm_gemini.invoke(messages)
             return response.content
         except ChatGoogleGenerativeAIError:
-            return get_rule_based_feedback(st.session_state.role,st.session_state.difficulty,answer)
+            return "I'm having trouble generating feedback right now. Please try again!"
 
 def get_next_question(role, difficulty, asked_questions=None):
     question_list = f"\nDo not repeat these questions: {asked_questions}" if asked_questions else ""
