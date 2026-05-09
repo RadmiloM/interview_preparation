@@ -15,7 +15,7 @@ llm_mistral = ChatMistralAI(
     api_key=os.getenv("MISTRAL_API_KEY")
 )
 
-llm_gemini = ChatGoogleGenerativeAI(model="gemini-1.5-flash", 
+llm_gemini = ChatGoogleGenerativeAI(model="gemini-2.0-flash", 
                                     api_key=os.getenv("GEMINI_API_KEY"))
 st.title("Interview Coach")
 
@@ -40,6 +40,10 @@ def get_feedback(question, answer):
         - What was good
         - What was missing or incorrect
         - One specific improvement"""), ("human", "Provide me a feedback for my response.") ]
+    
+    if(len(answer.split()) < 10):
+        return "Your answer is too brief. Try to elaborate with at least 2-3 sentences covering the key concepts."
+    
     try:
         response = llm_mistral.invoke(messages)
         return response.content
@@ -48,7 +52,7 @@ def get_feedback(question, answer):
             response = llm_gemini.invoke(messages)
             return response.content
         except ChatGoogleGenerativeAIError:
-            return "I'm having trouble generating feedback right now. Let's try again!"
+            return get_rule_based_feedback(st.session_state.role,st.session_state.difficulty,answer)
 
 def get_next_question(role, difficulty, asked_questions=None):
     question_list = f"\nDo not repeat these questions: {asked_questions}" if asked_questions else ""
@@ -68,7 +72,7 @@ Just the question."""),
             return response.content
         except ChatGoogleGenerativeAIError:
             return "I'm having trouble generating the next question right now. Let's try again!"
-
+        
 def get_summary(llm_messages):
     history = "\n".join([f"{m['role']}: {m['content']}" for m in llm_messages])
     messages = [("system", f"Create summary based on whole session {history}"), ("human", "Provide me a summary of the interview session.")]
@@ -107,6 +111,7 @@ if st.session_state.interview_started:
                                                       asked_questions)
              st.session_state.messages.append({"role": "assistant", "content": next_question, "type":"question"})
              st.session_state.question_count+=1
+             st.rerun()
 else:
     role = st.selectbox("Pick a role: ", [
     "Frontend Developer",
