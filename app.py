@@ -8,6 +8,7 @@ from langchain_mistralai import ChatMistralAI
 from langchain_google_genai import ChatGoogleGenerativeAI
 from langchain_google_genai.chat_models import ChatGoogleGenerativeAIError
 from tenacity import retry, stop_after_attempt, wait_exponential
+import json
 
 load_dotenv()
 
@@ -16,6 +17,10 @@ llm_mistral = ChatMistralAI(
     api_key=os.getenv("MISTRAL_API_KEY")
 )
 
+with open("questions_db/questions.json",'r') as file:
+    questions = json.load(file)
+
+print(questions)
 llm_gemini = ChatGoogleGenerativeAI(model="gemini-2.0-flash", 
                                     api_key=os.getenv("GEMINI_API_KEY"))
 st.title("Interview Coach")
@@ -25,7 +30,7 @@ if "messages" not in st.session_state:
 
 if "interview_started" not in st.session_state:
     st.session_state.interview_started = False
-    
+
 if "question_count" not in st.session_state:
     st.session_state.question_count = 0
 
@@ -80,7 +85,7 @@ Just the question."""),
             response = llm_gemini.invoke(messages)
             return response.content
         except ChatGoogleGenerativeAIError:
-            return "I'm having trouble generating the next question right now. Let's try again!"
+            return questions
         
 def get_summary(llm_messages):
     history = "\n".join([f"{m['role']}: {m['content']}" for m in llm_messages])
