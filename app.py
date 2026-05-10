@@ -82,7 +82,8 @@ def get_feedback(question, answer):
         - What was good
         - What was missing or incorrect
         - One specific improvement"""), ("human", "Provide me a feedback for my response.") ] 
-    return invoke_with_fallback(messages, fallback="I'm having trouble generating feedback right now. Please try again!")
+    return invoke_with_fallback(messages, fallback="⚠️ Could not generate feedback at this moment. " \
+    "Both AI services are unavailable. Please try submitting your answer again.")
     
 def get_next_question(role, difficulty, asked_questions=None):
     question_list = f"\nDo not repeat these questions: {asked_questions}" if asked_questions else ""
