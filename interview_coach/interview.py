@@ -44,4 +44,5 @@ Just the question."""),
 def get_summary(llm_messages):
     history = "\n".join([f"{message['role']}: {message['content']}" for message in llm_messages])
     messages = [("system", f"Create summary based on whole session {history}"), ("human", "Provide me a summary of the interview session.")]
-    return invoke_with_fallback(messages,fallback="I'm having trouble generating the summary. Let's try again!")
+    fallback_summary = "\n\n".join([message['content'] for message in llm_messages if message.get('type') == 'feedback'])
+    return invoke_with_fallback(messages,fallback=fallback_summary)
