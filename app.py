@@ -20,7 +20,7 @@ llm_mistral = ChatMistralAI(
 with open("questions_db/questions.json",'r') as file:
     questions = json.load(file)
 
-llm_gemini = ChatGoogleGenerativeAI(model="gemini-2.0-flash", 
+llm_gemini = ChatGoogleGenerativeAI(model="gemini-2.5-flash", 
                                     api_key=os.getenv("GEMINI_API_KEY"))
 st.title("Interview Coach")
 
@@ -51,8 +51,21 @@ def call_mistral(messages):
     reraise=True 
 )
 def call_gemini(messages):
-    response = llm_mistral.invoke(messages)
+    response = llm_gemini.invoke(messages)
     return response.content
+
+def invoke_with_fallback(messages, fallback=None):
+    try:
+        return call_mistral(messages)
+    except Exception as e:
+        print(f"Mistral failed: {type(e).__name__}: {e}")
+    
+    try:
+        return call_gemini(messages)
+    except Exception as e:
+        print(f"Gemini failed: {type(e).__name__}: {e}")
+    
+    return fallback
 
 def get_feedback(question, answer):
     answer_words_count = len(answer.split())
@@ -69,15 +82,8 @@ def get_feedback(question, answer):
         - What was good
         - What was missing or incorrect
         - One specific improvement"""), ("human", "Provide me a feedback for my response.") ] 
+    return invoke_with_fallback(messages, fallback="I'm having trouble generating feedback right now. Please try again!")
     
-    try:
-        return call_mistral(messages)
-    except httpx.HTTPStatusError:
-        try:
-            return call_gemini(messages)
-        except ChatGoogleGenerativeAIError:
-            return "I'm having trouble generating feedback right now. Please try again!"
-
 def get_next_question(role, difficulty, asked_questions=None):
     question_list = f"\nDo not repeat these questions: {asked_questions}" if asked_questions else ""
     messages = [
@@ -87,24 +93,12 @@ No explanations, no follow-up probes, no commentary.{question_list}
 Just the question."""),
         ("human", "Ask me one interview question.")
     ]
-    try:
-        return call_mistral(messages)
-    except httpx.HTTPStatusError:
-        try:
-            return call_gemini(messages)
-        except ChatGoogleGenerativeAIError:
-            return questions
-        
+    return invoke_with_fallback(messages,fallback=questions)
+      
 def get_summary(llm_messages):
     history = "\n".join([f"{m['role']}: {m['content']}" for m in llm_messages])
     messages = [("system", f"Create summary based on whole session {history}"), ("human", "Provide me a summary of the interview session.")]
-    try:
-        return call_mistral(messages)
-    except httpx.HTTPStatusError:
-        try:
-            return call_gemini(messages)
-        except ChatGoogleGenerativeAIError:
-            return "I'm having trouble generating the summary. Let's try again!"
+    return invoke_with_fallback(messages,fallback="I'm having trouble generating the summary. Let's try again!")
 
 if st.session_state.interview_started:
     for message in st.session_state.messages:
