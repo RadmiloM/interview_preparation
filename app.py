@@ -114,18 +114,18 @@ if st.session_state.interview_started:
         question = st.session_state.messages[-1]['content']  
         answer = user_input  
         st.session_state.messages.append({"role": "user", "content": user_input})
-        with st.spinner("Generating feedback in progress..."):
+        with st.spinner("💬 Generating feedback in progress..."):
                 feedback = get_feedback(question, answer)
         st.session_state.messages.append({"role": "assistant", "content": feedback, "type": "feedback"})
         asked_questions = [message['content'] for message in st.session_state.messages if message.get('type') == 'question']
-        if st.session_state.question_count >= 10 and not st.session_state.interview_finished:
-            with st.spinner("Generating summary in progress..."):
+        if st.session_state.question_count >= 5 and not st.session_state.interview_finished:
+            with st.spinner("📝 Generating summary in progress..."):
                 whole_summary = get_summary(st.session_state.messages)
-                st.session_state.messages.append({"role":"assistant","content":whole_summary})
+                st.session_state.messages.append({"role":"assistant","content":whole_summary, "type":"summary"})
                 st.session_state.interview_finished = True
                 st.rerun()
         else:
-             with st.spinner("Generating question in progress..."):
+             with st.spinner("🤔 Generating question in progress..."):
                     next_question = get_next_question(st.session_state.role,
                                                       st.session_state.difficulty,
                                                       asked_questions)
@@ -146,7 +146,7 @@ else:
         st.session_state.interview_started = True
         st.session_state.role = role
         st.session_state.difficulty = difficulty
-        with st.spinner("Generating question in progress..."):
+        with st.spinner("🤔 Generating question in progress..."):
                 question = get_next_question(st.session_state.role, st.session_state.difficulty)
         st.session_state.messages.append({"role": "assistant","content": question, "type": "question"})
         st.session_state.question_count+=1
@@ -169,4 +169,14 @@ def reset_interview():
 if st.session_state.get("interview_finished", False):
     st.write("---") 
     st.success("Interview finished!!")
+    print(st.session_state.messages)
+    summary = next((message['content'] for message in reversed(st.session_state.messages)
+                    if message.get("type") =="summary"), None)
+    if summary:
+        st.download_button(
+            label="📄 Download Summary",
+            data=summary,
+            file_name="interview_summary.txt",
+            mime="text/plain"
+        )
     st.button("Start New Interview", on_click=reset_interview)
