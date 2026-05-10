@@ -12,16 +12,24 @@ import json
 
 load_dotenv()
 
+mistral_key = os.getenv("MISTRAL_API_KEY")
+gemini_key = os.getenv("GEMINI_API_KEY")
+
+if not mistral_key or not gemini_key:
+    st.error("⚠️ Missing API keys. Check your .env file.")
+    st.stop()
+
 llm_mistral = ChatMistralAI(
     model="mistral-small-latest",
     api_key=os.getenv("MISTRAL_API_KEY")
 )
 
-with open("questions_db/questions.json",'r') as file:
-    questions = json.load(file)
-
 llm_gemini = ChatGoogleGenerativeAI(model="gemini-2.5-flash", 
                                     api_key=os.getenv("GEMINI_API_KEY"))
+
+with open("questions_db/questions.json",'r') as file:
+    questions = json.load(file)
+    
 st.title("Interview Coach")
 
 if "messages" not in st.session_state:
@@ -146,9 +154,6 @@ else:
         st.session_state.messages.append({"role": "assistant","content": question, "type": "question"})
         st.session_state.question_count+=1
         st.rerun()
-
-
-
 
 def reset_interview():
         st.session_state.interview_started = False
