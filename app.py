@@ -4,7 +4,7 @@ import streamlit as st
 from dotenv import load_dotenv
 import os
 from langchain_mistralai import ChatMistralAI
-
+from datetime import datetime
 from langchain_google_genai import ChatGoogleGenerativeAI
 from langchain_google_genai.chat_models import ChatGoogleGenerativeAIError
 from tenacity import retry, stop_after_attempt, wait_exponential
@@ -160,7 +160,6 @@ def reset_interview():
         st.session_state.messages = []
         st.session_state.question_count = 0
         st.session_state.interview_finished = False
-        print(st.session_state)
         if 'role' in st.session_state:
             del st.session_state.role
         if 'difficulty' in st.session_state:
@@ -169,14 +168,20 @@ def reset_interview():
 if st.session_state.get("interview_finished", False):
     st.write("---") 
     st.success("Interview finished!!")
-    print(st.session_state.messages)
+
+    timestamp = datetime.now().strftime("%Y-%m-%d_%H-%M")
+    role = st.session_state.role.replace(" ", "_")
+    difficulty = st.session_state.difficulty
+    file_name = f"interview_{role}_{difficulty}_{timestamp}.txt"
+    
     summary = next((message['content'] for message in reversed(st.session_state.messages)
                     if message.get("type") =="summary"), None)
+    
     if summary:
         st.download_button(
             label="📄 Download Summary",
             data=summary,
-            file_name="interview_summary.txt",
+            file_name=file_name,
             mime="text/plain"
         )
     st.button("Start New Interview", on_click=reset_interview)
