@@ -20,7 +20,6 @@ llm_mistral = ChatMistralAI(
 with open("questions_db/questions.json",'r') as file:
     questions = json.load(file)
 
-print(questions)
 llm_gemini = ChatGoogleGenerativeAI(model="gemini-2.0-flash", 
                                     api_key=os.getenv("GEMINI_API_KEY"))
 st.title("Interview Coach")
@@ -42,10 +41,23 @@ if "interview_finished" not in st.session_state:
     stop=stop_after_attempt(3),
     reraise=True 
 )
+def call_mistral(messages):
+    response = llm_mistral.invoke(messages)
+    return response.content
+
+@retry(
+    wait=wait_exponential(multiplier=1, min=2, max=10),
+    stop=stop_after_attempt(3),
+    reraise=True 
+)
+def call_gemini(messages):
+    response = llm_mistral.invoke(messages)
+    return response.content
+
 def get_feedback(question, answer):
     answer_words_count = len(answer.split())
 
-    if(answer_words_count < 10):
+    if(answer_words_count < 5):
         return "Your answer is too brief. Try to elaborate with at least 2-3 sentences covering the key concepts."
     
     messages = [("system",f"""
@@ -59,12 +71,10 @@ def get_feedback(question, answer):
         - One specific improvement"""), ("human", "Provide me a feedback for my response.") ] 
     
     try:
-        response = llm_mistral.invoke(messages)
-        return response.content
+        return call_mistral(messages)
     except httpx.HTTPStatusError:
         try:
-            response = llm_gemini.invoke(messages)
-            return response.content
+            return call_gemini(messages)
         except ChatGoogleGenerativeAIError:
             return "I'm having trouble generating feedback right now. Please try again!"
 
@@ -78,12 +88,10 @@ Just the question."""),
         ("human", "Ask me one interview question.")
     ]
     try:
-        response = llm_mistral.invoke(messages)
-        return response.content
+        return call_mistral(messages)
     except httpx.HTTPStatusError:
         try:
-            response = llm_gemini.invoke(messages)
-            return response.content
+            return call_gemini(messages)
         except ChatGoogleGenerativeAIError:
             return questions
         
@@ -91,12 +99,10 @@ def get_summary(llm_messages):
     history = "\n".join([f"{m['role']}: {m['content']}" for m in llm_messages])
     messages = [("system", f"Create summary based on whole session {history}"), ("human", "Provide me a summary of the interview session.")]
     try:
-        response = llm_mistral.invoke(messages)
-        return response.content
+        return call_mistral(messages)
     except httpx.HTTPStatusError:
         try:
-            response = llm_gemini.invoke(messages)
-            return response.content
+            return call_gemini(messages)
         except ChatGoogleGenerativeAIError:
             return "I'm having trouble generating the summary. Let's try again!"
 
@@ -112,7 +118,7 @@ if st.session_state.interview_started:
                 feedback = get_feedback(question, answer)
         st.session_state.messages.append({"role": "assistant", "content": feedback, "type": "feedback"})
         asked_questions = [message['content'] for message in st.session_state.messages if message.get('type') == 'question']
-        if st.session_state.question_count >= 5 and not st.session_state.interview_finished:
+        if st.session_state.question_count >= 10 and not st.session_state.interview_finished:
             with st.spinner("Generating summary in progress..."):
                 whole_summary = get_summary(st.session_state.messages)
                 st.session_state.messages.append({"role":"assistant","content":whole_summary})
