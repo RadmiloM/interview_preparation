@@ -6,9 +6,9 @@ import os
 from langchain_mistralai import ChatMistralAI
 from datetime import datetime
 from langchain_google_genai import ChatGoogleGenerativeAI
-from langchain_google_genai.chat_models import ChatGoogleGenerativeAIError
 from tenacity import retry, stop_after_attempt, wait_exponential
 import json
+import random
 
 load_dotenv()
 
@@ -29,8 +29,8 @@ llm_gemini = ChatGoogleGenerativeAI(model="gemini-2.5-flash",
 
 with open("questions_db/questions.json",'r') as file:
     questions = json.load(file)
-    
 st.title("Interview Coach")
+
 
 if "messages" not in st.session_state:
     st.session_state.messages = []
@@ -102,7 +102,17 @@ No explanations, no follow-up probes, no commentary.{question_list}
 Just the question."""),
         ("human", "Ask me one interview question.")
     ]
-    return invoke_with_fallback(messages,fallback=questions)
+
+    available_questions = [
+        question for question in questions[role][difficulty]
+        if question not in (asked_questions or [])
+    ]
+
+    fallback_question = (
+        random.choice(available_questions) if available_questions
+        else random.choice(questions[role][difficulty])
+    )
+    return invoke_with_fallback(messages,fallback=fallback_question)
       
 def get_summary(llm_messages):
     history = "\n".join([f"{m['role']}: {m['content']}" for m in llm_messages])
