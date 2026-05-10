@@ -1,0 +1,192 @@
+{
+  "Frontend Developer": {
+    "Junior": [
+      "What is the difference between HTML, CSS, and JavaScript?",
+      "Can you explain the CSS box model?",
+      "What is the difference between `==` and `===` in JavaScript?",
+      "What are the differences between `var`, `let`, and `const`?",
+      "What is a CSS flexbox and when would you use it?",
+      "How do you make a website responsive?",
+      "What is the DOM and how do you interact with it?",
+      "What is the difference between `inline`, `block`, and `inline-block` elements?",
+      "How do you center an element horizontally and vertically in CSS?",
+      "What is an event listener and how do you add one in JavaScript?"
+    ],
+    "Mid": [
+      "What is the difference between CSS Grid and Flexbox, and when would you use each?",
+      "Can you explain how JavaScript closures work and give a practical example?",
+      "What is event delegation and why is it useful?",
+      "How does the browser render a webpage from HTML to pixels?",
+      "What are promises in JavaScript and how do they differ from callbacks?",
+      "What is the virtual DOM and how does React use it?",
+      "How would you optimize the performance of a web application?",
+      "What is CSS specificity and how is it calculated?",
+      "Can you explain the difference between `null`, `undefined`, and undeclared variables?",
+      "What is the purpose of `async/await` and how does it relate to promises?"
+    ],
+    "Senior": [
+      "How would you architect a large-scale frontend application for maintainability and scalability?",
+      "What are the trade-offs between server-side rendering, client-side rendering, and static site generation?",
+      "How do you approach performance optimization in a React application at scale?",
+      "Can you explain the concept of micro-frontends and when you would use this architecture?",
+      "How would you implement and enforce accessibility standards across a large codebase?",
+      "What strategies do you use for state management in complex applications, and what are the trade-offs?",
+      "How would you design a component library that is consumed by multiple teams?",
+      "How do you handle security vulnerabilities like XSS and CSRF in frontend applications?",
+      "What is your approach to code reviews and maintaining code quality across a team?",
+      "How would you migrate a legacy JavaScript codebase to TypeScript incrementally?"
+    ]
+  },
+  "Backend Developer": {
+    "Junior": [
+      "What is the difference between GET and POST HTTP methods?",
+      "Can you explain what a REST API is?",
+      "What is the difference between SQL and NoSQL databases?",
+      "What is a primary key in a database?",
+      "What is the purpose of an ORM?",
+      "What is the difference between authentication and authorization?",
+      "What is a foreign key and how does it relate to joins?",
+      "What is the difference between synchronous and asynchronous code?",
+      "What is an HTTP status code? Give examples of 200, 404, and 500.",
+      "What is JSON and why is it commonly used in APIs?"
+    ],
+    "Mid": [
+      "How would you design a RESTful API for a basic e-commerce platform?",
+      "What is database indexing and how does it improve query performance?",
+      "Can you explain the difference between SQL JOINs: INNER, LEFT, RIGHT, and FULL OUTER?",
+      "What is the N+1 query problem and how do you solve it?",
+      "How do you handle database migrations in a production environment?",
+      "What is caching and what strategies would you use to implement it?",
+      "How do you secure an API endpoint using JWT tokens?",
+      "What is the difference between horizontal and vertical scaling?",
+      "How would you implement rate limiting on an API?",
+      "What are ACID properties in database transactions?"
+    ],
+    "Senior": [
+      "How would you design a distributed system that handles 1 million requests per day?",
+      "What are the trade-offs between monolithic and microservices architectures?",
+      "How would you approach database sharding and what problems does it introduce?",
+      "Can you explain the CAP theorem and how it affects distributed system design?",
+      "How would you design an event-driven architecture using message queues?",
+      "What is your approach to handling failures and ensuring resilience in a distributed system?",
+      "How would you implement zero-downtime deployments for a critical backend service?",
+      "What are the trade-offs between different API paradigms: REST, GraphQL, and gRPC?",
+      "How would you design a system to handle idempotency in financial transactions?",
+      "What strategies do you use to monitor, debug, and trace issues in a microservices environment?"
+    ]
+  },
+  "Data Analyst": {
+    "Junior": [
+      "What is the difference between a mean, median, and mode?",
+      "What is a JOIN in SQL and can you give an example?",
+      "What is the difference between a bar chart and a histogram?",
+      "How would you handle missing values in a dataset?",
+      "What is the difference between correlation and causation?",
+      "What is a pivot table and when would you use one?",
+      "What tools have you used for data visualization?",
+      "What is the purpose of the GROUP BY clause in SQL?",
+      "What is the difference between structured and unstructured data?",
+      "How would you clean a dataset that contains duplicate rows?"
+    ],
+    "Mid": [
+      "How would you identify and handle outliers in a dataset?",
+      "What is the difference between a left join and an inner join, and when would you use each?",
+      "Can you explain what a cohort analysis is and when it is useful?",
+      "What is A/B testing and how do you determine statistical significance?",
+      "How would you approach building a dashboard for a business stakeholder?",
+      "What is the difference between descriptive, diagnostic, predictive, and prescriptive analytics?",
+      "How do you validate the accuracy and reliability of your analysis?",
+      "What is a window function in SQL and can you give a practical example?",
+      "How would you communicate a complex data finding to a non-technical audience?",
+      "What is data normalization and why is it important?"
+    ],
+    "Senior": [
+      "How would you design a data pipeline from raw data ingestion to business reporting?",
+      "What are the trade-offs between a data warehouse and a data lake?",
+      "How would you build and validate a forecasting model for business metrics?",
+      "What is your approach to defining KPIs for a new product feature?",
+      "How would you ensure data quality and consistency across multiple data sources?",
+      "What strategies do you use to make data analysis reproducible and auditable?",
+      "How would you approach building a self-serve analytics platform for non-technical users?",
+      "What are the ethical considerations when working with user data?",
+      "How would you identify whether a drop in a key business metric is a data issue or a real trend?",
+      "What is your approach to mentoring junior analysts and establishing best practices in a team?"
+    ]
+  },
+  "QA Engineer": {
+    "Junior": [
+      "What is the difference between manual and automated testing?",
+      "What is a test case and what should it include?",
+      "What is the difference between a bug, a defect, and an error?",
+      "What is regression testing and why is it important?",
+      "What is the difference between black-box and white-box testing?",
+      "What is a smoke test?",
+      "How do you prioritize which bugs to fix first?",
+      "What information should a good bug report include?",
+      "What is the difference between functional and non-functional testing?",
+      "What is boundary value analysis and can you give an example?"
+    ],
+    "Mid": [
+      "How would you design a test strategy for a new feature from scratch?",
+      "What is the difference between unit, integration, and end-to-end testing?",
+      "How do you decide what to automate versus test manually?",
+      "What is the test pyramid and how does it guide your testing approach?",
+      "How would you test a REST API endpoint?",
+      "What is mocking and when would you use it in tests?",
+      "How do you measure test coverage and what are its limitations?",
+      "What is the difference between load testing and stress testing?",
+      "How would you approach testing a feature that has no requirements documentation?",
+      "What is continuous integration and how does it relate to your testing workflow?"
+    ],
+    "Senior": [
+      "How would you build a quality assurance strategy for a team releasing multiple times per day?",
+      "What are the trade-offs between different test automation frameworks?",
+      "How would you introduce a testing culture in a team that has no existing tests?",
+      "How do you balance test coverage with release velocity?",
+      "What is your approach to performance testing at scale?",
+      "How would you design an end-to-end testing framework for a microservices architecture?",
+      "What strategies do you use to reduce flaky tests in a CI/CD pipeline?",
+      "How would you approach security testing for a web application?",
+      "How do you measure and communicate the ROI of quality engineering to stakeholders?",
+      "What is shift-left testing and how have you implemented it in practice?"
+    ]
+  },
+  "DevOps Engineer": {
+    "Junior": [
+      "What is the difference between continuous integration and continuous deployment?",
+      "What is Docker and what problem does it solve?",
+      "What is the difference between a virtual machine and a container?",
+      "What is a pipeline in the context of CI/CD?",
+      "What is version control and why is it important in a DevOps workflow?",
+      "What is an environment variable and why should you use them?",
+      "What is the purpose of a load balancer?",
+      "What is the difference between horizontal and vertical scaling?",
+      "What is SSH and how do you use it to connect to a remote server?",
+      "What is the purpose of a Dockerfile?"
+    ],
+    "Mid": [
+      "How would you design a CI/CD pipeline for a web application?",
+      "What is Kubernetes and what problems does it solve compared to plain Docker?",
+      "How would you implement zero-downtime deployments?",
+      "What is infrastructure as code and what tools have you used for it?",
+      "How do you monitor a production application and what metrics do you track?",
+      "What is the difference between blue-green and canary deployments?",
+      "How would you handle secrets and credentials in a CI/CD pipeline?",
+      "What is a reverse proxy and when would you use one?",
+      "How would you approach incident response when a production service goes down?",
+      "What is the difference between logging, monitoring, and alerting?"
+    ],
+    "Senior": [
+      "How would you design the infrastructure for a highly available application serving global traffic?",
+      "What are the trade-offs between different cloud providers for a new greenfield project?",
+      "How would you implement a disaster recovery strategy with a low RTO and RPO?",
+      "What is your approach to managing infrastructure drift across multiple environments?",
+      "How would you design a multi-tenant Kubernetes cluster with strong isolation between tenants?",
+      "What strategies do you use to reduce cloud infrastructure costs without impacting reliability?",
+      "How would you build an internal developer platform to improve engineering productivity?",
+      "What is your approach to security hardening across the entire infrastructure stack?",
+      "How would you handle a large-scale database migration with zero downtime?",
+      "How do you balance the speed of feature delivery with the stability and reliability of infrastructure?"
+    ]
+  }
+}
