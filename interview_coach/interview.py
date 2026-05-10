@@ -1,6 +1,7 @@
 import random
 from llm import invoke_with_fallback
 from config import questions
+
 def get_feedback(question, answer):
     answer_words_count = len(answer.split())
 
@@ -19,6 +20,12 @@ def get_feedback(question, answer):
     return invoke_with_fallback(messages, fallback="⚠️ Could not generate feedback at this moment. " \
     "Both AI services are unavailable. Please try submitting your answer again.")
 
+def get_available_questions(role,difficulty,asked_questions=None):
+    return [
+        question for question in questions[role][difficulty]
+        if question not in (asked_questions or [])
+    ]
+
 def get_next_question(role, difficulty, asked_questions=None):
     question_list = f"\nDo not repeat these questions: {asked_questions}" if asked_questions else ""
     messages = [
@@ -29,10 +36,7 @@ Just the question."""),
         ("human", "Ask me one interview question.")
     ]
 
-    available_questions = [
-        question for question in questions[role][difficulty]
-        if question not in (asked_questions or [])
-    ]
+    available_questions = get_available_questions(role,difficulty,asked_questions)
 
     fallback_question = (
         random.choice(available_questions) if available_questions
@@ -40,9 +44,13 @@ Just the question."""),
     )
     return invoke_with_fallback(messages,fallback=fallback_question)
 
-
+def build_fallback_summary(llm_messages):
+    return "\n\n".join([
+        message['content'] for message in llm_messages 
+        if message.get('type') == 'feedback'
+    ])
 def get_summary(llm_messages):
     history = "\n".join([f"{message['role']}: {message['content']}" for message in llm_messages])
     messages = [("system", f"Create summary based on whole session {history}"), ("human", "Provide me a summary of the interview session.")]
-    fallback_summary = "\n\n".join([message['content'] for message in llm_messages if message.get('type') == 'feedback'])
+    fallback_summary = build_fallback_summary(llm_messages)
     return invoke_with_fallback(messages,fallback=fallback_summary)
