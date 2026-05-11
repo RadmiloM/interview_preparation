@@ -1,6 +1,5 @@
 from interview import get_feedback, get_available_questions, build_fallback_summary
 from config import questions
-from unittest.mock import patch
 def test_get_feedback_when_input_is_less_than_five_words():
     answer="I am not sure"
     result = get_feedback("What is CSS?", answer)
