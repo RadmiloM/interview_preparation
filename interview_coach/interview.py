@@ -11,6 +11,8 @@ class FeedbackEvaluation(BaseModel):
     clarity_reason: str
     structure_score: int = Field(ge=1, le=5)
     structure_reason: str
+    appropriateness_score: int = Field(ge=1, le=5)
+    appropriateness_reason: str
 
 def get_feedback(question, answer):
     answer_words_count = len(answer.split())
@@ -30,13 +32,19 @@ def get_feedback(question, answer):
     return invoke_with_fallback(messages, fallback="⚠️ Could not generate feedback at this moment. " \
     "Both AI services are unavailable. Please try submitting your answer again.")
 
-def evaluate_feedback_quality(question,answer,feedback):
+def evaluate_feedback_quality(question,answer,feedback,answer_type):
     messages = [("system", f"""
     You are a feedback judge. Evaluate the quality of interview feedback.
     
     Question: {question}
     Candidate's answer: {answer}
     Provided feedback: {feedback}
+    Answer level: {answer_type}
+
+    appropriateness: Does the feedback match the quality level of the answer?
+    - For 'weak' answers: feedback should explain what a correct answer looks like
+    - For 'medium' answers: feedback should acknowledge what's correct and push for more depth  
+    - For 'strong' answers: feedback should confirm excellence and suggest only minor improvements
 
     Evaluate feedback on the scale 1-5 for each criterion.
     
@@ -51,7 +59,10 @@ def evaluate_feedback_quality(question,answer,feedback):
       "clarity_score": 3,
       "clarity_reason": "explanation here",
       "structure_score": 5,
-      "structure_reason": "explanation here"
+      "structure_reason": "explanation here",
+      "appropriateness_score": 4,
+      "appropriateness_reason": "explanation here"
+
     }}"""), ("human", "Evaluate the feedback.")]
     
     structured_llm = llm_mistral.with_structured_output(FeedbackEvaluation)

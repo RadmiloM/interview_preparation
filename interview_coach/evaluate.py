@@ -17,7 +17,10 @@ for q in questions:
     for answer_type in ['weak','medium','strong']:
         answer = q['answers'][answer_type]
         llm_feedback = get_feedback(q['question'],answer)
-        llm_feedback_evaluation = evaluate_feedback_quality(q['question'],answer,llm_feedback)
+        llm_feedback_evaluation = evaluate_feedback_quality(q['question'],answer,llm_feedback,answer_type)
         print(f"Content: {llm_feedback_evaluation.content_score}/5 — {llm_feedback_evaluation.content_reason}")
         print(f"Clarity: {llm_feedback_evaluation.clarity_score}/5 — {llm_feedback_evaluation.clarity_reason}")
         print(f"Structure: {llm_feedback_evaluation.structure_score}/5 — {llm_feedback_evaluation.structure_reason}")
+        print(f"Appropriateness: {llm_feedback_evaluation.appropriateness_score}/5 — {llm_feedback_evaluation.appropriateness_reason}")
+        print(f"Answer type: {answer_type}")
+        print("---")
