@@ -42,6 +42,7 @@ def evaluate_feedback_quality(question,answer,feedback):
       - Clarity: Does the feedback provide clear and understandable insights?
       - Structure: Does the feedback cover what was good, what was missing or incorrect, and provide a specific improvement?"""), 
       ("human", "Evaluate feedback provided for the user") ]
+    
     structured_llm = llm_mistral.with_structured_output(FeedbackEvaluation)
     result = structured_llm.invoke(messages)
     return result;

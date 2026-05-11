@@ -1,0 +1,57 @@
+[
+  {
+    "id": 1,
+    "role": "Frontend Developer",
+    "difficulty": "Junior",
+    "question": "What is the difference between HTML, CSS, and JavaScript?",
+    "answers": {
+      "weak": "html is for websites css makes it look nice and javascript does stuff",
+      "medium": "HTML is the structure of a webpage, CSS is used for styling like colors and fonts, and JavaScript adds interactivity to the page.",
+      "strong": "HTML defines the structure and content of a webpage using elements like headings, paragraphs, and divs. CSS controls the visual presentation — layout, colors, spacing, and typography. JavaScript adds behavior and interactivity, like responding to user clicks or fetching data from an API. They work together as separate layers: structure, presentation, and behavior."
+    }
+  },
+  {
+    "id": 2,
+    "role": "Frontend Developer",
+    "difficulty": "Junior",
+    "question": "Can you explain the CSS box model?",
+    "answers": {
+      "weak": "its how css makes boxes on screen i think",
+      "medium": "The box model consists of content, padding, border, and margin. Each element on a page is a box made up of these layers.",
+      "strong": "The CSS box model describes how every HTML element is rendered as a rectangular box with four layers: content (the actual text or image), padding (space between content and border), border (the edge around the padding), and margin (space outside the border that separates the element from others). For example, if I set padding: 10px and border: 2px, the total rendered width increases by 24px unless I use box-sizing: border-box."
+    }
+  },
+  {
+    "id": 3,
+    "role": "Frontend Developer",
+    "difficulty": "Junior",
+    "question": "What is the difference between `==` and `===` in JavaScript?",
+    "answers": {
+      "weak": "i dont know maybe one has more equals",
+      "medium": "== checks if values are equal but === also checks the type. So 1 == '1' is true but 1 === '1' is false.",
+      "strong": "== performs loose equality with type coercion, meaning JavaScript converts one operand to match the other's type before comparing. For example, 0 == false is true because false is coerced to 0. === performs strict equality without coercion, so both value and type must match. In practice I always use === to avoid unexpected behavior from implicit type conversions."
+    }
+  },
+  {
+    "id": 4,
+    "role": "Frontend Developer",
+    "difficulty": "Junior",
+    "question": "What are the differences between `var`, `let`, and `const`?",
+    "answers": {
+      "weak": "var is old let and const are new ones",
+      "medium": "var is function-scoped and can be redeclared. let is block-scoped and can be reassigned but not redeclared. const is also block-scoped but cannot be reassigned after declaration.",
+      "strong": "var is function-scoped, hoisted to the top of its function, and can be redeclared which often causes bugs. let and const are block-scoped, introduced in ES6, and are not accessible before their declaration due to the temporal dead zone. const prevents reassignment of the binding, but if it holds an object or array, the contents can still be mutated. I use const by default and only switch to let when I know the value needs to change."
+    }
+  },
+  {
+    "id": 5,
+    "role": "Frontend Developer",
+    "difficulty": "Junior",
+    "question": "How do you center an element horizontally and vertically in CSS?",
+    "answers": {
+      "weak": "margin auto maybe or text align center",
+      "medium": "You can use flexbox by setting display: flex, justify-content: center, and align-items: center on the parent element.",
+      "strong": "The most reliable modern approach is flexbox: set display: flex, justify-content: center, and align-items: center on the parent container. Another option is CSS Grid with place-items: center. For older approaches, you could use position: absolute with top: 50%, left: 50%, and transform: translate(-50%, -50%) to center relative to the nearest positioned ancestor. I prefer flexbox because it's readable and doesn't require the child to have a known size."
+    }
+  }
+]

@@ -1,5 +1,12 @@
 import streamlit as st
 from datetime import datetime
+from config import mistral_key, gemini_key, init_llms
+
+if not mistral_key or not gemini_key:
+    st.error("⚠️ Missing API keys. Check your .env file.")
+    st.stop()
+
+init_llms()
 from interview import get_feedback, get_next_question, get_summary
 
 st.title("Interview Coach")
