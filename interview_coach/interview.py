@@ -31,17 +31,28 @@ def get_feedback(question, answer):
     "Both AI services are unavailable. Please try submitting your answer again.")
 
 def evaluate_feedback_quality(question,answer,feedback):
-    messages = [("system",f"""
-                    You are an feedback judge.
-            Question: {question}
-            Candidate's answer: {answer}
-            Provided feedback: {feedback}
+    messages = [("system", f"""
+    You are a feedback judge. Evaluate the quality of interview feedback.
+    
+    Question: {question}
+    Candidate's answer: {answer}
+    Provided feedback: {feedback}
 
-        Evaluate feedback on the scale 1-5 for:
-      - Content: Does the feedback accurately assess the technical content of the response?
-      - Clarity: Does the feedback provide clear and understandable insights?
-      - Structure: Does the feedback cover what was good, what was missing or incorrect, and provide a specific improvement?"""), 
-      ("human", "Evaluate feedback provided for the user") ]
+    Evaluate feedback on the scale 1-5 for each criterion.
+    
+    Content: Does the feedback accurately assess the technical content?
+    Clarity: Does the feedback provide clear and understandable insights?
+    Structure: Does the feedback cover what was good, what was missing, and one improvement?
+    
+    Return your evaluation in this exact format:
+    {{
+      "content_score": 4,
+      "content_reason": "explanation here",
+      "clarity_score": 3,
+      "clarity_reason": "explanation here",
+      "structure_score": 5,
+      "structure_reason": "explanation here"
+    }}"""), ("human", "Evaluate the feedback.")]
     
     structured_llm = llm_mistral.with_structured_output(FeedbackEvaluation)
     result = structured_llm.invoke(messages)
