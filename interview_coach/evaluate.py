@@ -1,6 +1,7 @@
 import os
 import json
 from config import init_llms
+from datetime import datetime
 
 init_llms()
 
@@ -12,15 +13,30 @@ BASE_DIR = os.path.dirname(os.path.abspath(__file__))
 with open(os.path.join(BASE_DIR, "evaluation_data", "validation_set.json"), "r") as file:
     questions = json.load(file)
 
-
+results = []
 for q in questions:
     for answer_type in ['weak','medium','strong']:
         answer = q['answers'][answer_type]
         llm_feedback = get_feedback(q['question'],answer)
         llm_feedback_evaluation = evaluate_feedback_quality(q['question'],answer,llm_feedback,answer_type)
-        print(f"Content: {llm_feedback_evaluation.content_score}/5 — {llm_feedback_evaluation.content_reason}")
-        print(f"Clarity: {llm_feedback_evaluation.clarity_score}/5 — {llm_feedback_evaluation.clarity_reason}")
-        print(f"Structure: {llm_feedback_evaluation.structure_score}/5 — {llm_feedback_evaluation.structure_reason}")
-        print(f"Appropriateness: {llm_feedback_evaluation.appropriateness_score}/5 — {llm_feedback_evaluation.appropriateness_reason}")
-        print(f"Answer type: {answer_type}")
-        print("---")
+        results.append({
+            "question": q['question'],
+            "answer_type": answer_type,
+            "content_score": llm_feedback_evaluation.content_score,
+            "content_reason": llm_feedback_evaluation.content_reason,
+            "clarity_score": llm_feedback_evaluation.clarity_score,
+            "clarity_reason": llm_feedback_evaluation.clarity_reason,
+            "structure_score": llm_feedback_evaluation.structure_score,
+            "structure_reason": llm_feedback_evaluation.structure_reason,
+            "appropriateness_score": llm_feedback_evaluation.appropriateness_score,
+            "appropriateness_reason": llm_feedback_evaluation.appropriateness_reason
+        })
+
+timestamp = datetime.now().strftime("%Y-%m-%d_%H-%M")
+first_item = questions[0]
+role = first_item['role'].replace(" ", "_")
+difficulty = first_item['difficulty']
+file_name = f"evaluation_{role}_{difficulty}_{timestamp}.json"
+
+with open(file_name, 'w') as f:
+    json.dump(results, f,indent=2)
