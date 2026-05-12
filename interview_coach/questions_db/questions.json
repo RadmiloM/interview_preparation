@@ -188,5 +188,43 @@
       "How would you handle a large-scale database migration with zero downtime?",
       "How do you balance the speed of feature delivery with the stability and reliability of infrastructure?"
     ]
+  },
+  "HR Manager": {
+    "Junior": [
+      "Tell me about yourself and why you are interested in this position.",
+      "How do you handle working in a team when there are disagreements?",
+      "Describe a time when you had to meet a tight deadline. How did you manage it?",
+      "What motivates you in your work?",
+      "How do you prioritize tasks when you have multiple things to do at once?",
+      "Tell me about a time you made a mistake. What did you do about it?",
+      "How do you handle feedback or criticism from a manager?",
+      "Describe a situation where you had to learn something new quickly.",
+      "Why are you leaving your current or previous job?",
+      "Where do you see yourself in the next two to three years?"
+    ],
+    "Mid": [
+      "Describe a situation where you had a conflict with a colleague. How did you resolve it?",
+      "Tell me about a project where things did not go as planned. What did you do?",
+      "How do you manage competing priorities when everything feels urgent?",
+      "Give an example of a time you had to influence someone without having direct authority over them.",
+      "Describe a time when you had to deliver difficult news to a stakeholder or manager.",
+      "Tell me about a time you went above and beyond what was expected in your role.",
+      "How do you approach working with people who have a very different working style from yours?",
+      "Describe a situation where you identified a problem before it became serious. What did you do?",
+      "Give an example of a time you had to adapt quickly to a significant change at work.",
+      "Tell me about the most challenging project you have worked on and what you learned from it."
+    ],
+    "Senior": [
+      "Describe a time when you had to make a difficult decision with incomplete information. How did you approach it?",
+      "Tell me about a time you led a team through a significant challenge or organizational change.",
+      "How do you build trust and psychological safety within a team?",
+      "Describe a situation where you had to push back on a decision made by leadership. How did you handle it?",
+      "Tell me about a time you had to manage underperformance in someone on your team.",
+      "How do you balance short-term delivery pressure with long-term team health and sustainability?",
+      "Describe a time when you had to align multiple stakeholders with conflicting interests.",
+      "Tell me about a strategic initiative you drove from conception to execution. What was the outcome?",
+      "How do you approach mentoring and developing people on your team?",
+      "Describe a time when you failed in a leadership capacity. What did you learn and how did you change your approach?"
+    ]
   }
 }
