@@ -41,3 +41,17 @@ def invoke_with_fallback(messages, fallback=None):
 
     logger.warning(f"Both LLM models unavailable, returning fallback response")
     return fallback
+
+def invoke_with_fallback_tracked(messages, fallback=None):
+    try:
+        return call_mistral(messages), "mistral"
+    except Exception as e:
+        logger.error(f"Mistral failed: {type(e).__name__}: {e}")
+    
+    try:
+        return call_gemini(messages), "gemini"
+    except Exception as e:
+        logger.error(f"Gemini failed: {type(e).__name__}: {e}")
+
+    logger.warning(f"Both LLM models unavailable, returning fallback response")
+    return fallback, "fallback"

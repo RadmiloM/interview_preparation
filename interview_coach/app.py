@@ -32,7 +32,7 @@ if st.session_state.interview_started:
         answer = user_input  
         st.session_state.messages.append({"role": "user", "content": user_input})
         with st.spinner("💬 Generating feedback in progress..."):
-                feedback = get_feedback(question, answer)
+                feedback, model_used = get_feedback(question, answer)
         st.session_state.messages.append({"role": "assistant", "content": feedback, "type": "feedback"})
         asked_questions = [message['content'] for message in st.session_state.messages if message.get('type') == 'question']
         if st.session_state.question_count >= 5 and not st.session_state.interview_finished:

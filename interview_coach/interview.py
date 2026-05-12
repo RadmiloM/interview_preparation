@@ -1,8 +1,8 @@
 import random
-from llm import invoke_with_fallback
+from llm import invoke_with_fallback,invoke_with_fallback_tracked
 from config import questions
 from pydantic import BaseModel, Field
-from config import llm_mistral
+from config import llm_mistral,llm_gemini
 
 class FeedbackEvaluation(BaseModel):
     content_score: int = Field(ge=1, le=5)
@@ -18,7 +18,7 @@ def get_feedback(question, answer):
     answer_words_count = len(answer.split())
 
     if(answer_words_count < 5):
-        return "Your answer is too brief. Try to elaborate with at least 2-3 sentences covering the key concepts."
+        return "Your answer is too brief. Try to elaborate with at least 2-3 sentences covering the key concepts.", "none"
     
     messages = [("system",f"""
                     You are an interview evaluator.
@@ -29,10 +29,10 @@ def get_feedback(question, answer):
         - What was good
         - What was missing or incorrect
         - One specific improvement"""), ("human", "Provide me a feedback for my response.") ] 
-    return invoke_with_fallback(messages, fallback="⚠️ Could not generate feedback at this moment. " \
+    return invoke_with_fallback_tracked(messages, fallback="⚠️ Could not generate feedback at this moment. " \
     "Both AI services are unavailable. Please try submitting your answer again.")
 
-def evaluate_feedback_quality(question,answer,feedback,answer_type):
+def evaluate_feedback_quality(question,answer,feedback,answer_type,feedback_model):
     messages = [("system", f"""
     You are a feedback judge. Evaluate the quality of interview feedback.
     
@@ -65,9 +65,15 @@ def evaluate_feedback_quality(question,answer,feedback,answer_type):
 
     }}"""), ("human", "Evaluate the feedback.")]
     
-    structured_llm = llm_mistral.with_structured_output(FeedbackEvaluation)
-    result = structured_llm.invoke(messages)
-    return result;
+    if feedback_model == "gemini":
+        structured_llm = llm_mistral.with_structured_output(FeedbackEvaluation)
+        result = structured_llm.invoke(messages)
+        return result
+    elif feedback_model == "mistral":
+        structured_llm = llm_gemini.with_structured_output(FeedbackEvaluation)
+        result = structured_llm.invoke(messages)
+        return result
+    return None;
 
 def get_available_questions(role,difficulty,asked_questions=None):
     return [
