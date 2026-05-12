@@ -47,3 +47,8 @@ GEMINI_API_KEY=your_gemini_key_here
 5. After each answer you will receive feedback covering what was good, what was missing, and one specific improvement
 6. After 5 questions the session ends automatically with a summary of your performance
 7. Download the summary as a `.txt` file for future reference
+
+## Live Demo
+
+The application is deployed and accessible at:
+https://practical-interview-preparation.streamlit.app/
