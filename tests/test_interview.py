@@ -2,7 +2,7 @@ from interview import get_feedback, get_available_questions, build_fallback_summ
 from config import questions
 def test_get_feedback_when_input_is_less_than_five_words():
     answer="I am not sure"
-    result = get_feedback("What is CSS?", answer)
+    result,model_used = get_feedback("What is CSS?", answer)
     assert result == "Your answer is too brief. Try to elaborate with at least 2-3 sentences covering the key concepts."
 
 def test_get_available_questions_returns_all_when_none_asked ():
