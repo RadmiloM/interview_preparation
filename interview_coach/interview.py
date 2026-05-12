@@ -81,12 +81,19 @@ def get_available_questions(role,difficulty,asked_questions=None):
         if question not in (asked_questions or [])
     ]
 
-def get_next_question(role, difficulty, asked_questions=None):
+def get_next_question(role, difficulty, asked_questions=None, previous_feedback=None):
     question_list = f"\nDo not repeat these questions: {asked_questions}" if asked_questions else ""
+    
+    build_on_feedback = (
+    f"\nBased on the previous feedback: '{previous_feedback}', "
+    f"identify the weak areas and ask a follow-up question that targets those specific gaps. "
+    f"If there are no clear weak areas, ask a new relevant question."
+) if previous_feedback else ""
+    
     messages = [
         ("system", f"""You are an interview coach for {role} at {difficulty} level.
 Ask ONE interview question only.
-No explanations, no follow-up probes, no commentary.{question_list}
+No explanations, no follow-up probes, no commentary.{question_list}{build_on_feedback}
 Just the question."""),
         ("human", "Ask me one interview question.")
     ]

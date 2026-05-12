@@ -42,10 +42,17 @@ if st.session_state.interview_started:
                 st.session_state.interview_finished = True
                 st.rerun()
         else:
+             previous_feedback = next(
+                (message['content'] for message in reversed(st.session_state.messages)
+                if message.get('type') == 'feedback'),
+                None
+            )
+
              with st.spinner("🤔 Generating question in progress..."):
                     next_question = get_next_question(st.session_state.role,
                                                       st.session_state.difficulty,
-                                                      asked_questions)
+                                                      asked_questions,
+                                                      previous_feedback)
              st.session_state.messages.append({"role": "assistant", "content": next_question, "type":"question"})
              st.session_state.question_count+=1
              st.rerun()
