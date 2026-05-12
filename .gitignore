@@ -1,6 +1,4 @@
 .env
 venv/
 __pycache__/
-    config.cpython-313.pyc      
-    llm.cpython-313.pyc         
-    interview.cpython-313.pyc  
+*.pyc
