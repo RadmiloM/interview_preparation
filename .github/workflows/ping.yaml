@@ -1,0 +1,8 @@
+on:
+  schedule:
+    - cron: '0 */12 * * *'
+jobs:
+  ping:
+    runs-on: ubuntu-latest
+    steps:
+      - run: curl -f https://practical-interview-preparation.streamlit.app/
