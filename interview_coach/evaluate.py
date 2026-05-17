@@ -1,5 +1,6 @@
 import os
 import json
+import argparse
 from config import init_llms
 from datetime import datetime
 
@@ -13,8 +14,23 @@ BASE_DIR = os.path.dirname(os.path.abspath(__file__))
 with open(os.path.join(BASE_DIR, "evaluation_data", "validation_set.json"), "r") as file:
     questions = json.load(file)
 
+parser = argparse.ArgumentParser(description="Run evaluation. Provide --role and --difficulty before running.")
+parser.add_argument("--role",help="Valid roles: Frontend Developer, Backend Developer, " \
+"Data Analyst, QA Engineer, DevOps Engineer, HR Manager", required=True)
+parser.add_argument("--difficulty", help="Valid difficulties: Junior, Mid, Senior", required=True)
+args = parser.parse_args()
+role=args.role
+difficulty=args.difficulty
+
+filtered_questions_for_evaluation = [q for q in questions if q['role'] == role and q['difficulty'] == difficulty]
+
+if not filtered_questions_for_evaluation:
+    print(f"No questions found for role='{args.role}' and difficulty='{args.difficulty}'")
+    print("Currently supported: --role 'Frontend Developer' --difficulty Junior")
+    exit(1)
+
 results = []
-for q in questions:
+for q in filtered_questions_for_evaluation:
     for answer_type in ['weak','medium','strong']:
         answer = q['answers'][answer_type]
         llm_feedback, model_used = get_feedback(q['question'],answer)
@@ -35,9 +51,7 @@ for q in questions:
             })
 
 timestamp = datetime.now().strftime("%Y-%m-%d_%H-%M")
-first_item = questions[0]
-role = first_item['role'].replace(" ", "_")
-difficulty = first_item['difficulty']
+role = role.replace(" ","_")
 file_name = f"evaluation_{role}_{difficulty}_{timestamp}.json"
 
 with open(file_name, 'w') as f:
