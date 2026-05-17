@@ -1,0 +1,41 @@
+[
+  {
+    "model_used": "mistral",
+    "question": "What is the difference between HTML, CSS, and JavaScript?",
+    "answer_type": "weak",
+    "content_score": 5,
+    "content_reason": "The feedback accurately identifies the lack of specificity in the candidate's answer and provides precise technical definitions for HTML, CSS, and JavaScript. It correctly points out the vagueness of 'websites' and 'does stuff'.",
+    "clarity_score": 5,
+    "clarity_reason": "The feedback is exceptionally clear and easy to understand. It uses straightforward language to explain what was missing and what a better answer would entail.",
+    "structure_score": 5,
+    "structure_reason": "The feedback perfectly follows the requested structure: it acknowledges the 'good start' (basic roles covered), clearly explains what was missing (clarity and specificity), and provides a concrete improvement suggestion with examples.",
+    "appropriateness_score": 5,
+    "appropriateness_reason": "For a 'weak' answer, the feedback is highly appropriate. It clearly explains what a correct answer looks like by providing precise definitions and technical terms, which is exactly what is needed for a weak response to guide the candidate towards improvement."
+  },
+  {
+    "model_used": "mistral",
+    "question": "What is the difference between HTML, CSS, and JavaScript?",
+    "answer_type": "medium",
+    "content_score": 5,
+    "content_reason": "The feedback accurately assesses the candidate's answer, correctly identifying its accuracy and clarity while also pointing out the lack of depth.",
+    "clarity_score": 5,
+    "clarity_reason": "The feedback is very clear and easy to understand. It uses straightforward language and provides concrete examples for improvement.",
+    "structure_score": 5,
+    "structure_reason": "The feedback perfectly follows the requested structure: it starts by praising what was good, then identifies what was missing (depth), and finally suggests a specific, actionable improvement with an example.",
+    "appropriateness_score": 5,
+    "appropriateness_reason": "For a 'medium' answer, the feedback appropriately acknowledges what was correct ('clear and accurate') and then pushes for more depth by suggesting additional details and an example, which aligns perfectly with the guidelines for medium answers."
+  },
+  {
+    "model_used": "mistral",
+    "question": "What is the difference between HTML, CSS, and JavaScript?",
+    "answer_type": "strong",
+    "content_score": 5,
+    "content_reason": "The feedback accurately assesses the candidate's strong understanding and clear explanation of HTML, CSS, and JavaScript. The suggested improvement is minor and valid for an already excellent answer.",
+    "clarity_score": 5,
+    "clarity_reason": "The feedback is very clear and easy to understand, with concise language and direct points.",
+    "structure_score": 5,
+    "structure_reason": "The feedback starts with what was good, then provides a specific and actionable minor improvement, and concludes with an overall positive statement. This follows the desired structure perfectly.",
+    "appropriateness_score": 5,
+    "appropriateness_reason": "The candidate's answer was strong, and the feedback appropriately confirms excellence while suggesting only a minor, optional improvement, aligning with the guidelines for a 'strong' answer."
+  }
+]
