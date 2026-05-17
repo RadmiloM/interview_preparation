@@ -30,6 +30,7 @@ if not filtered_questions_for_evaluation:
     exit(1)
 
 results = []
+metrics = ['content_score', 'clarity_score', 'structure_score', 'appropriateness_score']
 try:
     for q in filtered_questions_for_evaluation:
         for answer_type in ['weak','medium','strong']:
@@ -58,5 +59,12 @@ finally:
         print(f"Saved {len(results)} results to {file_name}")
         with open(os.path.join(BASE_DIR, "evaluation_data", file_name), "w") as file:
             json.dump(results, file,indent=2)
+            
+        total_expected = len(filtered_questions_for_evaluation) * 3 
+        print(f"\n=== Evaluation Summary ({len(results)}/{total_expected} completed) ===")
+        for metric in metrics:
+            scores = [r[metric] for r in results]
+            avg = sum(scores) / len(scores)
+            print(f"{metric}: avg={avg:.2f}, min={min(scores)}, max={max(scores)}")
 
 

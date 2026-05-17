@@ -1,0 +1,28 @@
+[
+  {
+    "model_used": "mistral",
+    "question": "What is the difference between HTML, CSS, and JavaScript?",
+    "answer_type": "weak",
+    "content_score": 5,
+    "content_reason": "The feedback accurately identifies both the strengths (conciseness, basic understanding) and weaknesses (lack of technical depth) of the candidate's answer. It then provides the correct technical definitions for HTML (structure), CSS (styling), and JavaScript (interactivity), and offers helpful analogies.",
+    "clarity_score": 5,
+    "clarity_reason": "The feedback is very clear and easy to understand. It uses straightforward language and clearly articulates the points where the answer was good, where it lacked, and how to improve.",
+    "structure_score": 5,
+    "structure_reason": "The feedback perfectly adheres to the 'good, missing, improvement' structure. It first praises the conciseness, then explains the technical depth lacking, and finally suggests how to improve with better specific terms and analogies.",
+    "appropriateness_score": 5,
+    "appropriateness_reason": "The candidate's answer is very weak. The feedback is highly appropriate as it clearly explains what a correct and more technically sound answer would entail, providing specific definitions (structure, styling, interactivity) and useful analogies (skeleton, appearance, dynamic behavior). This directly guides the candidate on how to formulate a better response, which is ideal for a weak answer."
+  },
+  {
+    "model_used": "mistral",
+    "question": "What is the difference between HTML, CSS, and JavaScript?",
+    "answer_type": "medium",
+    "content_score": 5,
+    "content_reason": "The feedback accurately assesses the candidate's answer, correctly identifying what was good (foundational understanding, correct roles) and providing technically sound suggestions for what was missing (more precise terminology, examples) and how to improve (explicitly stating language types).",
+    "clarity_score": 5,
+    "clarity_reason": "The feedback is exceptionally clear and easy to understand. The language is direct, and the suggestions for improvement are specific and actionable, including helpful examples.",
+    "structure_score": 5,
+    "structure_reason": "The feedback perfectly follows the requested structure: it clearly states what was good, what was missing, and offers a concise improvement point, each under its own logical section.",
+    "appropriateness_score": 5,
+    "appropriateness_reason": "The feedback is highly appropriate for a 'medium' level answer. It acknowledges the correct parts of the candidate's response while effectively pushing for more depth, precision, and specific examples, which is exactly what's needed for an answer of this quality level."
+  }
+]
