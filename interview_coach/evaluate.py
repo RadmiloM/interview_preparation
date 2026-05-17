@@ -30,29 +30,33 @@ if not filtered_questions_for_evaluation:
     exit(1)
 
 results = []
-for q in filtered_questions_for_evaluation:
-    for answer_type in ['weak','medium','strong']:
-        answer = q['answers'][answer_type]
-        llm_feedback, model_used = get_feedback(q['question'],answer)
-        llm_feedback_evaluation = evaluate_feedback_quality(q['question'],answer,llm_feedback,answer_type,model_used)
-        if llm_feedback_evaluation is not None:
-            results.append({
-                "model_used": model_used,
-                "question": q['question'],
-                "answer_type": answer_type,
-                "content_score": llm_feedback_evaluation.content_score,
-                "content_reason": llm_feedback_evaluation.content_reason,
-                "clarity_score": llm_feedback_evaluation.clarity_score,
-                "clarity_reason": llm_feedback_evaluation.clarity_reason,
-                "structure_score": llm_feedback_evaluation.structure_score,
-                "structure_reason": llm_feedback_evaluation.structure_reason,
-                "appropriateness_score": llm_feedback_evaluation.appropriateness_score,
-                "appropriateness_reason": llm_feedback_evaluation.appropriateness_reason
-            })
+try:
+    for q in filtered_questions_for_evaluation:
+        for answer_type in ['weak','medium','strong']:
+            answer = q['answers'][answer_type]
+            llm_feedback, model_used = get_feedback(q['question'],answer)
+            llm_feedback_evaluation = evaluate_feedback_quality(q['question'],answer,llm_feedback,answer_type,model_used)
+            if llm_feedback_evaluation is not None:
+                results.append({
+                    "model_used": model_used,
+                    "question": q['question'],
+                    "answer_type": answer_type,
+                    "content_score": llm_feedback_evaluation.content_score,
+                    "content_reason": llm_feedback_evaluation.content_reason,
+                    "clarity_score": llm_feedback_evaluation.clarity_score,
+                    "clarity_reason": llm_feedback_evaluation.clarity_reason,
+                    "structure_score": llm_feedback_evaluation.structure_score,
+                    "structure_reason": llm_feedback_evaluation.structure_reason,
+                    "appropriateness_score": llm_feedback_evaluation.appropriateness_score,
+                    "appropriateness_reason": llm_feedback_evaluation.appropriateness_reason
+                })
+finally:
+    if results:
+        timestamp = datetime.now().strftime("%Y-%m-%d_%H-%M")
+        role = role.replace(" ","_")
+        file_name = f"evaluation_{role}_{difficulty}_{timestamp}.json"
+        print(f"Saved {len(results)} results to {file_name}")
+        with open(os.path.join(BASE_DIR, "evaluation_data", file_name), "w") as file:
+            json.dump(results, file,indent=2)
 
-timestamp = datetime.now().strftime("%Y-%m-%d_%H-%M")
-role = role.replace(" ","_")
-file_name = f"evaluation_{role}_{difficulty}_{timestamp}.json"
 
-with open(file_name, 'w') as f:
-    json.dump(results, f,indent=2)
